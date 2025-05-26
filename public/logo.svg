@@ -1,0 +1,32 @@
+<svg
+  width="360"
+  height="360"
+  viewBox="0 0 240 240"
+  xmlns="http://www.w3.org/2000/svg"
+  style="cursor: pointer;"
+>
+  <!-- Circle background -->
+  <circle cx="120" cy="120" r="115" fill="white" stroke="green" stroke-width="10" />
+  
+  <!-- Text -->
+  <text
+    x="50%"
+    y="110"
+    text-anchor="middle"
+    font-family="'Exile', sans-serif"
+    font-size="48"
+    fill="blue"
+  >
+    BMS
+  </text>
+  <text
+    x="50%"
+    y="150"
+    text-anchor="middle"
+    font-family="'Playpen Sans', cursive"
+    font-size="20"
+    fill="orange"
+  >
+    By Rahul
+  </text>
+</svg>
