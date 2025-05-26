@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Exile';
+    src: url('../assets/fonts/Exile-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Playpen Sans Deva";
+    src: url('../assets/fonts/PlaypenSansDeva-VariableFont_wght.ttf') format('truetype');
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}

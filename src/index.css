@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@import "./styles/fonts.css";
+
+:root {
+  --primary-bg-color: #f5f2ff;
+  --secondary-bg-color: #ffffff;
+}
+.bg-secondary {
+  background-color: var(--secondary-bg-color);
+}
+.font-exile {
+  font-family: "Exile", sans-serif;
+}
+.font-playpen {
+  font-family: "Playpen Sans Deva", sans-serif;
+}
+
+.shadow-top {
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  /* font-family: 'Playpen Sans Deva'; */
+}
+
+@media (width: 1024px) and (height: 600px) {
+  .hide-1024x600 {
+    display: none;
+  }
+}
