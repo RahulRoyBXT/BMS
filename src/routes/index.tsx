@@ -6,6 +6,8 @@ import { Login } from "./auth/Login";
 import { Register } from "./auth/Register";
 import { SignupAction } from "../actions/signupActions";
 import { loginAction } from "../actions/loginAction";
+import { ProtectedRoute } from "../components/ProtectedRoute";
+import { PublicRoute } from "../components/PublicRoute";
 // import Home from "./main/Home";
 // import { AuthLayout } from "../layouts/AuthLayout";
 // import ManageSeats from "./admin/ManageSeats";
@@ -13,7 +15,11 @@ import { loginAction } from "../actions/loginAction";
 const routes: RouteObject[] = [
     {
         path: '/',
-        element: <MainLayout />,
+        element: (
+            <ProtectedRoute>
+                <MainLayout />
+            </ProtectedRoute>
+        ),
         // children: [
         //     { index: true, element: <Home /> },
         //     { path: 'movies', element: <Movies /> },
@@ -23,17 +29,21 @@ const routes: RouteObject[] = [
     },
     {
         path: '/auth',
-        element: <AuthLayout />,
+        element: (
+            <PublicRoute>
+                <AuthLayout />
+            </PublicRoute>
+        ),
         children: [
             {
                 path: 'login',
                 element: <Login />,
-                action:loginAction,
+                action: loginAction,
             },
             {
                 path: 'register',
                 element: <Register />,
-                action:SignupAction,
+                action: SignupAction,
             }
         ],
     },
