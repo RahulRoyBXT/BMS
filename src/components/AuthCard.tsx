@@ -1,35 +1,96 @@
 import { RxCross2 } from "react-icons/rx";
 import { FaGoogle } from "react-icons/fa";
-import { Form, Link, useActionData, useLocation, useNavigate } from "react-router-dom";
+import { Form, Link, useActionData, useLocation, useNavigate, useSubmit } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import { auth } from "../common/firebase";
 import { loginWithGoogle } from "../api/FirebaseUserApi";
+import { loginSchema, registerSchema } from "../common/schemas/userSchema";
 
 export const AuthCard: React.FC = () => {
+    const [showError, setShowError] = useState<boolean>(false)
+    const [clientError, setClientError] = useState<string | null>(null)
+
+    const submit = useSubmit()
+
+    const formRef = useRef<HTMLFormElement>(null)
+
     const url = useLocation();
+
     const navigate = useNavigate();
-    const register = url.pathname !== '/auth/login';
+    const register = url.pathname === '/auth/register' || url.pathname === '/auth/register/';
 
     const { user } = useAuth()
+    // Check if current path is for registration
 
-    console.log('current user', user)
+    const actionData = useActionData() as { error?: string }
 
-    const actionData = useActionData()
+    console.log(actionData)
+    useEffect(() => {
+        console.log(actionData)
+    })
 
     useEffect(() => {
         if (user) {
             navigate('/')
         }
+
     }, [user, navigate])
+
+    useEffect(() => {
+        if (actionData?.error) {
+            setShowError(true)
+            const timerId = setTimeout(() => setShowError(false), 2000)
+
+            return () => clearTimeout(timerId)
+        }
+
+    }, [actionData])
 
 
     const handleCancelBtn = () => {
         navigate('/auth');
     };
 
+
+    const handleFormValidation = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        const form = formRef.current!
+        const formdata = new FormData(form)
+
+        const data = {
+            email: formdata.get('email') as string,
+            password: formdata.get('password') as string,
+            confirmPassword: formdata.get('confirmPassword') as string
+        }
+
+        const result = register ? registerSchema.safeParse(data)
+            : loginSchema.safeParse(data)
+
+        if (!result.success) {
+            setClientError(result.error.errors[0].message)
+            setShowError(true)
+            setTimeout(() => setShowError(false), 2000)
+            return
+
+        }
+
+        setClientError(null)
+
+
+        // Note: after preventing default .submit and .requestSubmit() do not trigger router action
+        submit(formdata, {
+            method: "post",
+        });
+    }
+
     return (
-        <Form method="post" className={`bg-secondary w-full max-w-[600px] md:w-[80%] lg:w-[60%] xl:w-[50%] h-[90%] md:h-auto shadow-top rounded-2xl overflow-auto mx-auto my-4 flex flex-col justify-self-center self-center`}>
+        <Form
+            onSubmit={handleFormValidation}
+            ref={formRef}
+            className={`bg-secondary w-full max-w-[600px] md:w-[80%] lg:w-[60%] xl:w-[50%] h-[90%] md:h-auto shadow-top rounded-2xl overflow-auto mx-auto my-4 flex flex-col justify-self-center self-center`}
+        >
 
             {/* Header */}
             <div className="bg-gradient-to-t from-[#5f30ca] via-[#8835d9] to-[#c03bea] rounded-t-2xl p-4 relative">
@@ -86,14 +147,15 @@ export const AuthCard: React.FC = () => {
                         <label className="block font-semibold mb-1">Re-enter Password</label>
                         <input
                             type="password"
+                            name="confirmPassword"
                             placeholder="********"
                             className="w-full p-2 border border-gray-400 rounded-md"
                             required
                         />
                     </div>
                 )}
-
-                {actionData?.error && <p className="text-red font-bold">{actionData.error}</p>}
+                {clientError && showError && <p className="text-red-600 text-xs font-bold">{clientError}</p>}
+                {actionData?.error && showError && <p className="text-red-600 text-xs font-bold">{actionData.error}</p>}
 
                 {/* Buttons */}
                 <div className="flex flex-col items-center gap-3 w-full max-w-[400px] mt-4">
@@ -101,7 +163,7 @@ export const AuthCard: React.FC = () => {
                         Continue
                     </button>
                     <span className="font-bold">OR</span>
-                    <button onClick={loginWithGoogle} className="w-full p-3 bg-black text-white flex items-center justify-center gap-2 rounded-md">
+                    <button type="button" onClick={loginWithGoogle} className="w-full p-3 bg-black text-white flex items-center justify-center gap-2 rounded-md">
                         <FaGoogle />
                         <span className="font-semibold text-sm">Connect with Google</span>
                     </button>

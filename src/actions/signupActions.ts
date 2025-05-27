@@ -10,6 +10,7 @@ type RegisterFormUserType = {
 
 
 export async function SignupAction({ request }: ActionFunctionArgs) {
+
   console.log("That Request: ", request);
   const formData = await request.formData();
 
@@ -48,7 +49,23 @@ export async function SignupAction({ request }: ActionFunctionArgs) {
     return redirect('/')
 
   } catch (error: unknown) {
-    if (error instanceof Error) throw new Error(error.message);
-    throw new Error("Something Went Wrong");
+    let message = "Signup failed. Please try again.";
+
+    if (typeof error === "object" && error !== null && "code" in error) {
+      const err = error as { code: string };
+
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          message = "Email is already in use.";
+          break;
+        case "auth/weak-password":
+          message = "Password should be at least 6 characters.";
+          break;
+        case "auth/invalid-email":
+          message = "Invalid email address.";
+          break;
+      }
+    }
+    return {error : message}
   }
 }
