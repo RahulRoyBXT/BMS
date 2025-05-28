@@ -8,6 +8,7 @@ import { SignupAction } from "../actions/signupActions";
 import { loginAction } from "../actions/loginAction";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { PublicRoute } from "../components/PublicRoute";
+import Loader from "../components/Loader/Loader";
 // import Home from "./main/Home";
 // import { AuthLayout } from "../layouts/AuthLayout";
 // import ManageSeats from "./admin/ManageSeats";
@@ -47,6 +48,10 @@ const routes: RouteObject[] = [
             }
         ],
     },
+    {
+        path: '/loading',
+        element: <Loader />
+    }
     // {
     //     path: '/admin',
     //     element: <AdminLayout />,

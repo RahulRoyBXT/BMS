@@ -25,3 +25,14 @@ dist-ssr
 
 .env
 .env.local
+
+
+# Docs Folder
+BestPractices
+BestPractices/*
+
+Prereq
+Prereq/*
+
+
+*storybook.log
